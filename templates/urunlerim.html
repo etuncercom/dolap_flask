@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+{% block title%} Ürünlerim {% endblock %}
+{% block stiller %}
+<link href="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+{% endblock %}
+{% block content_baslik %} Ürünlerim {% endblock %}
+{% block content_icerik %}
+                <div class="container-fluid">
+                     {% if islem==None %}
+                    <div class="card mb-4 py-3 border-left-success">
+                        <div class="card-body text-lg">
+                        Ürünlerinizi Dolap'tan çekmek için butona tıklayınız!
+                        <hr>
+                            <form class="user col-lg-3" id="urunlerim" method="POST" action="/urunlerim/getir">
+                                {% if hesaplar %}
+                                <div class="form-group">
+                                    <select name="hesap" class="form-control">
+                                        {% for hesap in hesaplar %}
+                                        <option value="{{ hesap['ID'] }}">{{ hesap['hesap_adi'] }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                {% endif %}
+                                <button type="submit" class="btn btn-primary btn-icon-split">
+                                    <span class="icon text-white-50">
+                                        <i class="fas fa-arrow-right"></i>
+                                    </span>
+                                <span class="text">Ürünlerimi Getir</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if islem=='getir' %}
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Ürünlerim</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="datalar" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Urun ID</th>
+                                            <th>Foto</th>
+                                            <th>Başlık</th>
+                                            <th>Fiyatı</th>
+                                            <th>Beğeni/Yorum</th>
+                                            <th>İşlemler</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for urun in urunler %}
+                                        <tr>
+                                            <td>{{ urun['id'] }}</td>
+                                            <td><img src="{{ urun['foto'] }}" width="100" height="100"></td>
+                                            <td>{{ urun['baslik'] }}</td>
+                                            <td>{{ urun['fiyat'] }} TL</td>
+                                            <td>{{ urun['begeni'] }}/{{ urun['yorum'] }}</td>
+                                            <td>
+                                                <a href="#" data-toggle="modal" data-target="#OneCikarModal-{{ urun['id'] }}" class="btn btn-warning btn-icon-split btn-sm">
+                                                    <span class="icon text-white-50">
+                                                        <i class="fas fa-thumbs-up"></i>
+                                                    </span>
+                                                    <span class="text">Öne Çıkar</span>
+                                                </a>
+
+                                                <div class="modal fade" id="OneCikarModal-{{ urun['id'] }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                                                    aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">{{ urun['id'] }} id'li Ürünü Öne Çıkar</h5>
+                                                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">×</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">{{ urun['baslik'] }} bu ürünü öne çıkarmak istiyor musun?</div>
+                                                               <form method="post" action="/urunlerim/one-cikar">
+                                                                   <input type="hidden" name="urun_id" id="urun_id" value="{{ urun['id'] }}">
+                                                                   <input type="hidden" name="hesap_adi" id="hesap_adi" value="{{ hesap_adi }}">
+                                                                    <div class="modal-footer">
+                                                                        <button class="btn btn-danger"  data-dismiss="modal" >İptal</button>
+                                                                        <button class="btn btn-warning" type="submit">Öne Çıkar</button>
+                                                                    </div>
+                                                               </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <br>
+                                                <a href="#" class="btn btn-success btn-icon-split btn-sm">
+                                                    <span class="icon text-white-50">
+                                                        <i class="fas fa-check"></i>
+                                                    </span>
+                                                    <span class="text">Fiyat Güncelle</span>
+                                                </a>
+                                                <br>
+                                                <a href="#" data-toggle="modal" data-target="#UrunSilModal-{{ urun['id'] }}" class="btn btn-danger btn-icon-split btn-sm">
+                                                    <span class="icon text-white-50">
+                                                        <i class="fas fa-trash"></i>
+                                                    </span>
+                                                    <span class="text">Sil</span>
+                                                </a>
+
+                                                <div class="modal fade" id="UrunSilModal-{{ urun['id'] }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                                                    aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">{{ urun['id'] }} id'li Ürün silinecektir</h5>
+                                                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">×</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">{{ urun['baslik'] }} bu ürünü silmek istiyor musun?</div>
+                                                               <form method="post" action="/urunlerim/sil">
+                                                                   <input type="hidden" name="urun_id" id="urun_id" value="{{ urun['id'] }}">
+                                                                    <div class="modal-footer">
+                                                                        <button class="btn btn-danger"  data-dismiss="modal" >İptal</button>
+                                                                        <button class="btn btn-warning" type="submit">Sil</button>
+                                                                    </div>
+                                                               </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor%}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if islem=='one-cikar' %}
+                        {% if one_cikar=='ok' %}
+                            <div class="card mb-4 py-3 border-left-success">
+                                <div class="card-body text-lg">
+                                    Ürün öne çıkarıldı! yönlendiriliyorsunuz...
+                                    <script type="text/javascript">
+                                        setTimeout(function (){
+                                            window.history.back()
+                                        },3000);
+                                    </script>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="card mb-4 py-3 border-left-danger">
+                                <div class="card-body text-lg">
+                                    Üzgünüm ürün öne çıkarılamadı! Hata Nedeni: "{{ one_cikar|e|safe }}" yönlendiriliyorsunuz...
+                                    <script type="text/javascript">
+                                        setTimeout(function (){
+                                            window.history.back()
+                                        },3000);
+                                    </script>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if islem=='sil' %}
+                        {% if sonuc=='ok' %}
+                            <div class="card mb-4 py-3 border-left-success">
+                                <div class="card-body text-lg">
+                                    Ürün silindi!
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="card mb-4 py-3 border-left-danger">
+                                <div class="card-body text-lg">
+                                    Üzgünüm ürün silinemedi!
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+
+                </div>
+{% endblock %}
+
+{% block script %}
+    <!-- Page level plugins -->
+    <script src="{{ url_for('static', filename='vendor/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{{ url_for('static', filename='js/demo/datatables-demo.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#datalar').DataTable( {
+                "order": [[ 0, "desc" ]],
+                "info":  false,
+                "searching": false,
+                "bLengthChange": false,
+                "bFilter": true,
+                "bInfo": false,
+                "bAutoWidth": false
+            } );
+        } );
+    </script>
+{% endblock %}

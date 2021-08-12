@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+{% block title%} Hesaplarım {% endblock %}
+{% block stiller %}
+<link href="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+{% endblock %}
+{% block content_baslik %} Takipçi İşlemlerim {% endblock %}
+{% block content_icerik %}
+                <div class="container-fluid">
+                     {% if islem==None %}
+                    <div class="card mb-4 py-3 border-left-danger">
+                        <div class="card-body text-lg">
+                            Takipçi işlemleri için soldaki menüyü kullanınız!
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if islem=='takip-et' %}
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Takip Et</h6>
+                        </div>
+                        <div class="card-body">
+                            {% if error %}
+                            <div class="card mb-4 py-3 border-left-danger">
+                                <div class="card-body text-lg">
+                                    {{ error }}
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if mesaj %}
+                            <div class="card mb-4 py-3 border-left-success">
+                                <div class="card-body text-lg">
+                                    {{ mesaj }}
+                                </div>
+                            </div>
+                            {% endif %}
+                            <div class="ajaxx">
+                                <div class="card mb-4 py-3 border-left-success">
+                                    <div class="card-body text-lg"></div>
+                                </div>
+                            </div>
+                            <div class="card mb-4 py-3 border-left-info infoyazi">
+                                <div class="card-body text-lg">
+                                    Takip edeceğiniz kişinin takipçilerini takip etmek için dolap kullanıcı adını aşağıdaki kutucuğa yazınız.
+                                </div>
+                            </div>
+
+                            <form class="user col-lg-3" id="takip">
+                                {% if hesaplar %}
+                                <div class="form-group">
+
+                                    <select name="hesap" class="form-control">
+                                        {% for hesap in hesaplar %}
+                                        <option value="{{ hesap['ID'] }}">{{ hesap['hesap_adi'] }}</option>
+                                        {% endfor %}
+                                    </select>
+
+                                </div>
+                                {% endif %}
+                                <div class="form-group">
+                                    <input type="text" class="form-control form-control-user"
+                                        name="profil_adi" id="t_profil_adi" placeholder="Takip edeceğiniz kişinin Profil adını giriniz" required>
+                                    <input type="hidden" name="islem" value="takip-et">
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-user btn-block">
+                                    Takip Etmeye Başla
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if islem=='takip-cikar' %}
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Takipten Çıkar</h6>
+                        </div>
+                        <div class="card-body">
+                            {% if error %}
+                            <div class="card mb-4 py-3 border-left-danger">
+                                <div class="card-body text-lg">
+                                    {{ error }}
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if mesaj %}
+                            <div class="card mb-4 py-3 border-left-success">
+                                <div class="card-body text-lg">
+                                    {{ mesaj }}
+                                </div>
+                            </div>
+                            {% endif %}
+                            <div class="ajaxx">
+                                <div class="card mb-4 py-3 border-left-success">
+                                    <div class="card-body text-lg"></div>
+                                </div>
+                            </div>
+                            <div class="card mb-4 py-3 border-left-info infoyazi">
+                                <div class="card-body text-lg">
+                                   Sizi takip edenlerin hepsini takipten çıkarmak için aşağıdaki kutucuğa dolap kullanıcı adınızı yazınız.
+                                </div>
+                            </div>
+                            <form class="user col-lg-3" id="takip">
+                                <div class="form-group">
+                                {% if hesaplar %}
+                                <div class="form-group">
+                                    <select name="hesap" class="form-control" required>
+                                        {% for hesap in hesaplar %}
+                                        <option value="{{ hesap['ID'] }}">{{ hesap['hesap_adi'] }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                {% endif %}
+                                    <input type="hidden" name="islem" value="takip-cikar">
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-user btn-block">
+                                    Takipten Çıkar
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if islem=='profil-oner' %}
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Profil Öner</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="card mb-4 py-3 border-left-info">
+                                <div class="card-body text-lg">
+                                    Profini önereciğiniz kişinin dolap kullanıcı adını aşağıdaki kutucuğa yazınız.
+                                </div>
+                            </div>
+                            {% if mesaj=='bos' %}
+                                <div class="card mb-4 py-3 border-left-danger">
+                                    <div class="card-body text-lg">
+                                        Profil adı kısmı boş bırakılamaz!
+                                    </div>
+                                </div>
+                            {% elif mesaj=='ok' %}
+                                <div class="card mb-4 py-3 border-left-success">
+                                    <div class="card-body text-lg">
+                                        Profil başarılı şekilde önerildi.
+                                    </div>
+                                </div>
+                            {% else %}
+                                {% if mesaj|length > 5 %}
+                                    <div class="card mb-4 py-3 border-left-danger">
+                                        <div class="card-body text-lg">
+                                             Profil önerilemedi hata oluştu! Hata nedeni: <strong>"{{ mesaj|e|safe }}"</strong>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                            {% endif %}
+                            <form class="user col-lg-3" method="post">
+                                {% if hesaplar %}
+                                <div class="form-group">
+                                    <select name="hesap" class="form-control">
+                                        {% for hesap in hesaplar %}
+                                        <option value="{{ hesap['ID'] }}">{{ hesap['hesap_adi'] }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                {% endif %}
+                                <div class="form-group">
+                                    <input type="text" class="form-control form-control-user"
+                                        name="profil_adi" id="profil_adi" placeholder="Profil adını giriniz" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-user btn-block">
+                                    Profili Öner
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                </div>
+{% endblock %}
+
+{% block script %}
+    <!-- Page level plugins -->
+    <script src="{{ url_for('static', filename='vendor/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{{ url_for('static', filename='js/demo/datatables-demo.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#datalar').DataTable( {
+                "info":  false,
+                "searching": false,
+                "bLengthChange": false,
+                "bFilter": true,
+                "bInfo": false,
+                "bAutoWidth": false
+            } );
+        } );
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            function YaziGoster(yazi){
+                $(".ajaxx").show(1000).find(".text-lg").text(yazi)
+            }
+
+            $(".ajaxx").hide()
+            $("form#takip").submit(function (e) {
+                $(this).hide(1000)
+                $(".infoyazi").hide(1000)
+                e.preventDefault();
+                var islem = $("input[name=islem]").val()
+                var data = $("form").serialize()
+
+                if (islem == 'takip-et'){
+                    $.ajax({
+                        url: "/takipci_islemlerim/takip-et",
+                        type: "POST",
+                        data: data,
+                        beforeSend: function (){
+                            YaziGoster("Takip etme işlemleri başladı...Yönlendiriliyorsunuz...");
+
+                            setTimeout(function (){
+                                window.location = '/takipci_islemlerim/takip-et'
+                            },5000);
+                        },
+                        success: function (){}
+                    });
+                }
+                else if (islem == 'takip-cikar'){
+                    $.ajax({
+                        url: "/takipci_islemlerim/takip-cikar",
+                        type: "POST",
+                        data: data,
+                        beforeSend: function (){
+                            YaziGoster("Takipten çıkarma işlemleri başladı...Yönlendiriliyorsunuz...");
+                            setTimeout(function (){
+                                window.location = '/takipci_islemlerim/takip-cikar'
+                            },5000);
+                        },
+                        success: function (){}
+                    });
+                }
+
+            });
+        });
+    </script>
+{% endblock %}

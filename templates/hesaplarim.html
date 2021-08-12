@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% block title%} Hesaplarım {% endblock %}
+{% block stiller %}
+<link href="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+{% endblock %}
+{% block content_baslik %} Hesaplarım {% endblock %}
+{% block content_icerik %}
+                <div class="container-fluid">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Hesaplarım</h6>
+                        </div>
+                        <div class="card-body">
+                            {% if islem == None %}
+                            <div class="table-responsive">
+                                <a href="/hesaplarim/ekle" class="btn btn-primary btn-icon-split">
+                                    <span class="icon text-white-50">
+                                        <i class="fas fa-plus"></i>
+                                    </span>
+                                    <span class="text">Hesap Ekle</span>
+                                </a>
+                                <table class="table table-bordered" id="datalar" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Hesap Adı</th>
+                                            <th>Dolap Takipçin</th>
+                                            <th>Dolap Takip Ettiğin</th>
+                                            <th>Dolap ID</th>
+                                            <th>İşlemler</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for hesap in hesaplar %}
+                                        <tr>
+                                            <td>{{ hesap['ID'] }}</td>
+                                            <td>{{ hesap['hesap_adi'] }}</td>
+                                            <td>{{ hesap['dolap_takip_eden'] }}</td>
+                                            <td>{{ hesap['dolap_takip_ettigi'] }}</td>
+                                            <td>{{ hesap['dolap_id'] }}</td>
+                                            <td>
+                                                <a href="#" data-toggle="modal" data-target="#BilgiGetirModal-{{ hesap['ID'] }}" class="btn btn-success btn-icon-split btn-sm">
+                                                    <span class="icon text-white-50">
+                                                        <i class="fas fa-arrow-right"></i>
+                                                    </span>
+                                                    <span class="text">Bilgileri Getir</span>
+                                                </a>
+
+                                                <div class="modal fade" id="BilgiGetirModal-{{ hesap['ID'] }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                                                    aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">{{ hesap['hesap_adi'] }} ad'lı hesap bilgileri güncellenecek</h5>
+                                                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">×</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">{{ hesap['hesap_adi'] }} ad'lı hesap bilgilerini güncellemek istiyor musun?</div>
+                                                               <form method="post" action="/hesaplarim/bilgileri-getir">
+                                                                   <input type="hidden" name="hesap_id" id="hesap_id" value="{{ hesap['ID'] }}">
+                                                                   <input type="hidden" name="hesap_adi" id="hesap_adi" value="{{ hesap['hesap_adi'] }}">
+                                                                    <div class="modal-footer">
+                                                                        <button class="btn btn-danger"  data-dismiss="modal" >İptal</button>
+                                                                        <button class="btn btn-success" type="submit">Bilgileri Güncelle</button>
+                                                                    </div>
+                                                               </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <br>
+                                                <a href="#" class="btn btn-danger btn-icon-split btn-sm">
+                                                    <span class="icon text-white-50">
+                                                        <i class="fas fa-trash"></i>
+                                                    </span>
+                                                    <span class="text">Sil</span>
+                                                </a>
+
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endif %}
+
+                            {% if islem=='bilgileri-getir' %}
+                                {% if error %}
+                                    <div class="card mb-4 py-3 border-left-danger">
+                                        <div class="card-body text-lg">
+                                            {{ error }}
+                                            <script type="text/javascript">
+                                                setTimeout(function (){
+                                                    window.location = {{ url_for('hesaplarim') }}
+                                                },3000);
+                                            </script>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if ok %}
+                                    <div class="card mb-4 py-3 border-left-success">
+                                        <div class="card-body text-lg">
+                                            {{ ok }}
+                                            <script type="text/javascript">
+                                                setTimeout(function (){
+                                                    window.location = {{ url_for('hesaplarim') }}
+                                                },3000);
+                                            </script>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+
+                            {% if islem == 'ekle' %}
+                                    <div class="card mb-4 py-3 border-left-info">
+                                        <div class="card-body text-lg">
+                                           Dolap kullanıcı bilgilerinizi kayıt ediniz
+                                        </div>
+                                    </div>
+                                    {% if error %}
+                                        <div class="card mb-4 py-3 border-left-danger">
+                                            <div class="card-body text-lg">
+                                                {{ error }}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if ok %}
+                                        <div class="card mb-4 py-3 border-left-success">
+                                            <div class="card-body text-lg">
+                                                {{ ok }}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    <form class="user col-lg-4" method="post">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control form-control-user"
+                                                name="kullanici_adi" id="kullanici_adi" placeholder="kullanıcı adın" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" class="form-control form-control-user"
+                                                name="sifre" id="sifre" placeholder="Şifre" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-user btn-block">
+                                            Kayıt Ol
+                                        </button>
+                                    </form>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                </div>
+{% endblock %}
+
+{% block script %}
+    <!-- Page level plugins -->
+    <script src="{{ url_for('static', filename='vendor/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{{ url_for('static', filename='js/demo/datatables-demo.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#datalar').DataTable( {
+                "info":  true,
+                "searching": false,
+                "bLengthChange": false,
+                "bFilter": true,
+                "bInfo": false,
+                "bAutoWidth": false
+            } );
+        } );
+    </script>
+{% endblock %}
