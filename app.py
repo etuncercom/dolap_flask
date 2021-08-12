@@ -34,7 +34,7 @@ url_list = {
     'urun_yorum': 'https://api.dolap.com/product/comment'
 }
 
-atoken = '20a5de2f-e2cc-40ff-b5f0-bcbf7aeeb915fc9540df-67da-4694-be52-9fa3bf53b3f0'
+atoken = '10a5de2f-e2cc-40ff-b5f0-bcbf7aeeb915fc9540df-67da-4694-be52-9fa3bf53b3f0'
 
 get_headers = {
     'Host': 'api.dolap.com',
