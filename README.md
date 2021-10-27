@@ -13,7 +13,8 @@ url_list = {
     'unlike_url': 'https://api.dolap.com/product/unlike/',
     'profil': 'https://dolap.com/profil/',
     'profil_oner': 'https://api.dolap.com/share/closet',
-    'one_cikar': 'https://api.dolap.com/product/boost/',
+    'one_cikar': 'https://api-gateway.dolap.com/boost/product/',
+    'one_cikar_eski': 'https://api.dolap.com/product/boost/',
     'urun_sil': 'https://api.dolap.com/product/close',
     'k_urun_ara': 'https://api.dolap.com/search',
     'urun_yorum': 'https://api.dolap.com/product/comment'
