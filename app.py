@@ -28,7 +28,8 @@ url_list = {
     'unlike_url': 'https://api.dolap.com/product/unlike/',
     'profil': 'https://dolap.com/profil/',
     'profil_oner': 'https://api.dolap.com/share/closet',
-    'one_cikar': 'https://api.dolap.com/product/boost/',
+    'one_cikar': 'https://api-gateway.dolap.com/boost/product/',
+    'one_cikar_eski': 'https://api.dolap.com/product/boost/',
     'urun_sil': 'https://api.dolap.com/product/close',
     'k_urun_ara': 'https://api.dolap.com/search',
     'urun_yorum': 'https://api.dolap.com/product/comment'
@@ -39,14 +40,30 @@ atoken = '10a5de2f-e2cc-40ff-b5f0-bcbf7aeeb915fc9540df-67da-4694-be52-9fa3bf53b3
 get_headers = {
     'Host': 'api.dolap.com',
     'Accept': '*/*',
-    'X-Epoch-Seconds': '1608556793',
-    'X-Signature': '7b824f5beee0b73151e481c44d263b7b95d49f8c55028397e70bc3e924eda0c122aef43e3aba8cdf447ed0592b5bc5e081cf59bd96e9b91fd53a8eac25697c8e',
-    'AppVersion': '191',
+    'X-Epoch-Seconds': '1633532488',
+    'X-Signature': '5cab951838fadd0cfe570febf21b1a04aa71bff90faafc47e1d3a6b730d3da493f43d76a26fb4dd6c79930d145e5bfa8762466d9cc9ab983e5eb0872f7b8d1c0',
+    'AppVersion': '253',
     'Accept-Language': 'tr-tr',
     'Accept-Encoding': 'gzip, deflate',
     'CategoryGroup': 'WOMAN',
     'Access-Token': atoken,
-    'User-Agent': 'dolap/1 CFNetwork/1209 Darwin/20.2.0',
+    'User-Agent': 'dolap/2 CFNetwork/1240.0.4 Darwin/20.6.0',
+    'Connection': 'close',
+    'AppPlatform': 'ios'
+}
+
+post_headers_one_cikar = {
+    'Host': 'api-gateway.dolap.com',
+    'Accept': '*/*',
+    'X-Epoch-Seconds': '1633532488',
+    'X-Signature': '5cab951838fadd0cfe570febf21b1a04aa71bff90faafc47e1d3a6b730d3da493f43d76a26fb4dd6c79930d145e5bfa8762466d9cc9ab983e5eb0872f7b8d1c0',
+    'AppVersion': '253',
+    'Accept-Language': 'tr-tr',
+    'Accept-Encoding': 'gzip, deflate',
+    'Content-Type': 'application/json',
+    'Content-Length': '46',
+    'Access-Token': atoken,
+    'User-Agent': 'dolap/2 CFNetwork/1240.0.4 Darwin/20.6.0',
     'Connection': 'close',
     'AppPlatform': 'ios'
 }
@@ -54,15 +71,15 @@ get_headers = {
 post_headers = {
     'Host': 'api.dolap.com',
     'Accept': '*/*',
-    'X-Epoch-Seconds': '1608556793',
-    'X-Signature': '7b824f5beee0b73151e481c44d263b7b95d49f8c55028397e70bc3e924eda0c122aef43e3aba8cdf447ed0592b5bc5e081cf59bd96e9b91fd53a8eac25697c8e',
-    'AppVersion': '191',
+    'X-Epoch-Seconds': '1633532488',
+    'X-Signature': '5cab951838fadd0cfe570febf21b1a04aa71bff90faafc47e1d3a6b730d3da493f43d76a26fb4dd6c79930d145e5bfa8762466d9cc9ab983e5eb0872f7b8d1c0',
+    'AppVersion': '253',
     'Accept-Language': 'tr-tr',
     'Accept-Encoding': 'gzip, deflate',
     'Content-Type': 'application/json',
     'Content-Length': '46',
     'Access-Token': atoken,
-    'User-Agent': 'dolap/1 CFNetwork/1209 Darwin/20.2.0',
+    'User-Agent': 'dolap/2 CFNetwork/1240.0.4 Darwin/20.6.0',
     'Connection': 'close',
     'AppPlatform': 'ios'
 }
@@ -71,15 +88,15 @@ put_headers = {
     'Host': 'api.dolap.com',
     'Accept': '*/*',
     'X-Epoch-Seconds': str(int(time.time())),
-    'X-Signature': '2fb8062b4502df757f3f7fcd51a8a363e9960b78662ffad1bd658010e2f17ae43930c8265aa25faa8865f474897abaa31ea3cdf9ab2bbd025ba91dfa5252063c',
-    'AppVersion': '194',
+    'X-Signature': '5cab951838fadd0cfe570febf21b1a04aa71bff90faafc47e1d3a6b730d3da493f43d76a26fb4dd6c79930d145e5bfa8762466d9cc9ab983e5eb0872f7b8d1c0',
+    'AppVersion': '253',
     'Accept-Language': 'tr-tr',
     'Accept-Encoding': 'gzip, deflate',
     'CategoryGroup': 'WOMAN',
     'Content-Type': 'application/json',
     'Content-Length': '234',
     'Access-Token': '',
-    'User-Agent': 'dolap/2 CFNetwork/1209 Darwin/20.2.0',
+    'User-Agent': 'dolap/2 CFNetwork/1240.0.4 Darwin/20.6.0',
     'Connection': 'close',
     'AppPlatform': 'ios',
 }
@@ -148,7 +165,7 @@ def takip_et(t_hesap, atoken, page=0, zaman=0):
         params = (
             ('page', page),
         )
-        if page < 100:
+        if page < 4:
             try:
                 r = requests.get(url_list['followers_url'] + user_id, headers=get_headers, params=params)
 
@@ -291,11 +308,27 @@ def urunlerimi_getir(hesap, atoken):
     return (urunler)
 
 
-def urun_one_cikar(urun_id: int, atoken):
+def eski_urun_one_cikar(urun_id: int, atoken):
     print(str(urun_id) + " nolu ürün id alındı")
     print("istek gönderiliyor...")
     get_headers['Access-Token'] = atoken
-    r = requests.get(url_list['one_cikar'] + urun_id, headers=get_headers)
+    r = requests.get(url_list['one_cikar'] + urun_id, headers=get_headers_one_cikar)
+    print("istek gönderildi.")
+    if r.status_code == 200:
+        print("istek sonuc başarılı.")
+        mesaj = 'ok'
+    else:
+        sonuc = r.json()
+        mesaj = sonuc['message']
+        print(sonuc['message'])
+    return mesaj
+
+def urun_one_cikar(urun_id: int, atoken):
+    print(str(urun_id) + " nolu ürün id alındı")
+    print("istek gönderiliyor...")
+    data = '{}'
+    post_headers_one_cikar['Access-Token'] = atoken
+    r = requests.post(url_list['one_cikar'] + urun_id, headers=post_headers_one_cikar, data=data)
     print("istek gönderildi.")
     if r.status_code == 200:
         print("istek sonuc başarılı.")
@@ -528,7 +561,7 @@ def takipci_islemlerim(islem=None):
                 cursor.execute(hesap_sql, (int(hesap_id), ))
                 hesap = cursor.fetchone()
                 atoken = str(hesap['atoken'])
-                t = AppContextThread(takip_et(p_adi, atoken))
+                t = AppContextThread(takip_et(p_adi, atoken, zaman=10))
                 t.start()
                 t.join()
         return render_template("takipci-islemlerim.html", islem=islem, error=error, mesaj=mesaj, hesaplar=hesaplar)
@@ -550,7 +583,7 @@ def takipci_islemlerim(islem=None):
                 hesap = cursor.fetchone()
                 hesap_adi = str(hesap['hesap_adi'])
                 atoken = str(hesap['atoken'])
-                t = AppContextThread(takip_cikar(hesap_adi, atoken))
+                t = AppContextThread(takip_cikar(hesap_adi, atoken, zaman=10))
                 t.start()
                 t.join()
 
