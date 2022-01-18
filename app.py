@@ -35,7 +35,6 @@ url_list = {
     'urun_yorum': 'https://api.dolap.com/product/comment'
 }
 
-atoken = '10a5de2f-e2cc-40ff-b5f0-bcbf7aeeb915fc9540df-67da-4694-be52-9fa3bf53b3f0'
 
 get_headers = {
     'Host': 'api.dolap.com',
@@ -47,9 +46,9 @@ get_headers = {
     'Accept-Encoding': 'gzip, deflate',
     'CategoryGroup': 'WOMAN',
     'Access-Token': atoken,
-    'User-Agent': 'dolap/2 CFNetwork/1240.0.4 Darwin/20.6.0',
+    'User-Agent': 'dolap/2 CFNetwork/1325.0.1 Darwin/21.1.0',
     'Connection': 'close',
-    'AppPlatform': 'ios'
+    'AppPlatform': 'ios',
 }
 
 post_headers_one_cikar = {
@@ -63,9 +62,9 @@ post_headers_one_cikar = {
     'Content-Type': 'application/json',
     'Content-Length': '46',
     'Access-Token': atoken,
-    'User-Agent': 'dolap/2 CFNetwork/1240.0.4 Darwin/20.6.0',
+    'User-Agent': 'dolap/2 CFNetwork/1325.0.1 Darwin/21.1.0',
     'Connection': 'close',
-    'AppPlatform': 'ios'
+    'AppPlatform': 'ios',
 }
 
 post_headers = {
@@ -79,9 +78,9 @@ post_headers = {
     'Content-Type': 'application/json',
     'Content-Length': '46',
     'Access-Token': atoken,
-    'User-Agent': 'dolap/2 CFNetwork/1240.0.4 Darwin/20.6.0',
+    'User-Agent': 'dolap/2 CFNetwork/1325.0.1 Darwin/21.1.0',
     'Connection': 'close',
-    'AppPlatform': 'ios'
+    'AppPlatform': 'ios',
 }
 
 put_headers = {
@@ -96,7 +95,7 @@ put_headers = {
     'Content-Type': 'application/json',
     'Content-Length': '234',
     'Access-Token': '',
-    'User-Agent': 'dolap/2 CFNetwork/1240.0.4 Darwin/20.6.0',
+    'User-Agent': 'dolap/2 CFNetwork/1325.0.1 Darwin/21.1.0',
     'Connection': 'close',
     'AppPlatform': 'ios',
 }
