@@ -1,5 +1,7 @@
 dolap uygulamasının python flask ile web arayüzünün yapılması
 
+_**eğitim amaçlıdır, sorumluluk kabul edilmemektedir._**
+
 # api listesi:
 ```
 url_list = {
