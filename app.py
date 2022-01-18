@@ -35,6 +35,7 @@ url_list = {
     'urun_yorum': 'https://api.dolap.com/product/comment'
 }
 
+atoken = '***_gerci_burasi_db_den_geliyor_***'
 
 get_headers = {
     'Host': 'api.dolap.com',
